@@ -1,0 +1,22 @@
+button {
+    font-size: 80%;
+    margin-right: 4px;
+}
+
+br {
+    margin-bottom: 4px;
+}
+
+.sel {
+    font-weight: bold;
+    color: red;
+}
+
+.expl {
+    color: grey;
+}
+
+#info {
+    font-size: 80%;
+    font-style: italic;
+}

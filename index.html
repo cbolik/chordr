@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Chordr</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <!-- <button id="C" onClick="copyChord(this.id)">C</button> -->
+    <p>
+      <b>Chordr</b> - click a button to have its chord symbol (e.g. [Em7]) be copied to your system's clipboard. Reload page to reset selections.
+    </p>
+    <p>
+      <div id="chords"></div>
+    </p>
+    <p>
+      <div id="info"></div>
+    </p>
+
+    <script>
+      const chords = ["C", "Cm", "C7", "Cm7", "Cadd9", "", 
+        "C#", "C#m", "C#7", "C#m7", "", 
+        "D", "Dm", "D7", "Dm7", "Dsus2", "Dsus4", "D/F#", "",
+        "D#", "D#m", "D#7", "D#m7", "",
+        "E", "Em", "E7", "Em7", "Esus2", "Esus4", "Em9", "",
+        "F", "Fm", "F7", "Fm7", "Fmaj7", "Fm11/C#", ":F#m11/C#: x44200", "",
+        "F#", "F#m", "F#7", "F#m7", "",
+        "G", "Gm", "G7", "Gm7", "G/D", "Gadd4", ":Gadd4: 320013", "",
+        "G#", "G#m", "G#7", "G#m7", "",
+        "A", "Am", "A7", "Am7", "Asus2", "Asus4", "A7sus4", ":A7sus4: x02030", "",
+        "A#", "A#m", "A#7", "A#m7", "",
+        "B", "Bm", "B7", "Bm7", "Bsus4", ":Bsus4: x24400"
+        ];
+
+      chords.forEach(crd => {
+        let div = document.getElementById("chords");
+        let el;
+        if (crd.length > 0) {
+          el = document.createElement("button");
+          if (crd.startsWith(":")) {
+            crd = crd.substring(1);
+            el.setAttribute("class", "expl");
+          }
+          el.setAttribute("id", crd);
+            el.setAttribute("onClick", "copyChord(this.id)");
+            el.innerHTML = crd;
+        } else {
+          el = document.createElement("p");
+        }
+        div.appendChild(el);
+      });
+
+      function copyChord(id) {
+        let crdEl = document.getElementById(id);
+        const str = crdEl.innerHTML;
+        let value;
+        if (crdEl.getAttribute("class") !== "expl") {
+          crdEl.setAttribute("class", "sel");
+          value = `[${str}]`;
+        } else {
+          value = str;
+        }
+
+        // The following was found at https://techoverflow.net/2018/03/30/copying-strings-to-the-clipboard-using-pure-javascript/
+        // Updates for iOS Safari from here: https://stackoverflow.com/questions/34045777/copy-to-clipboard-using-javascript-in-ios
+        // Create new element
+        let el = document.createElement("textarea");
+        el.setAttribute("contenteditable", "true");
+        // Set value (string to be copied)
+        el.value = value;
+        // Set non-editable to avoid focus and move outside of view
+        //el.setAttribute("readonly", ""); -- need to set to "true" for iOS Safari:
+        el.setAttribute("readonly", "true");
+        el.style = { position: "absolute", left: "-9999px" };
+        document.body.appendChild(el);
+        // Select text inside element
+        el.select();
+        el.setSelectionRange(0, value.length);
+        // Copy text to clipboard
+        document.execCommand("copy");
+        // Remove temporary element
+        document.body.removeChild(el);
+
+        info.innerHTML = `Copied to clipboard: ${value}`
+      }
+    </script>
+  </body>
+</html>
